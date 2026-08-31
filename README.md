@@ -11,6 +11,10 @@ An AI-powered Lead Management System built using **n8n, OpenAI, Google Sheets, a
 5. The lead details and AI results are saved in **Google Sheets**.
 6. A personalized email response is automatically sent through **Gmail**.
 
+## 🔄 Workflow
+
+![AI Lead Management Workflow](workflow.png)
+
 ## 🛠️ Technologies Used
 
 - **n8n** – Workflow automation
