@@ -1,0 +1,355 @@
+{
+  "name": "AI Lead Management System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "new-lead",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        32
+      ],
+      "id": "5b39ca82-a072-4bd1-aeaf-2fd8fb0e89e8",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6a6f4e91-55a2-4bbe-85d1-c3bf69ef338c",
+              "name": "name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "919170b5-0f41-4507-bb44-ded44af28194",
+              "name": "email",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "043fbd3b-846d-445b-8c32-57f67213801c",
+              "name": "company",
+              "value": "={{ $json.body.company }}",
+              "type": "string"
+            },
+            {
+              "id": "8ca09ae7-f80d-42e1-b828-8601a917ba07",
+              "name": "message",
+              "value": "={{ $json.body.message }}",
+              "type": "string"
+            },
+            {
+              "id": "6abcb6e0-c35f-4067-812c-82bce8b8d6ce",
+              "name": "status",
+              "value": "=New Lead",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": "={{ false }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -80,
+        32
+      ],
+      "id": "46c8202c-bdef-4169-9426-84fa55a7c2ca",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_GOOGLE_SHEET_ID",
+          "mode": "list",
+          "cachedResultName": "Your Google Sheet",
+          "cachedResultUrl": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "YOUR_SHEET_NAME",
+          "mode": "list",
+          "cachedResultName": "Your Sheet",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $('Edit Fields').item.json.email }}",
+            "message": "={{ $('Edit Fields').item.json.message }}",
+            "name": "={{ $('Edit Fields').item.json.name }}",
+            "company": "={{ $('Edit Fields').item.json.company }}",
+            "status": "={{ $('Edit Fields').item.json.status }}",
+            "Classification": "={{ $json.output.classification }}",
+            "Service Needed": "={{ $json.output.service_needed }}",
+            "Reason": "={{ $json.output.reason }}",
+            "Follow Up Message": "={{ $json.output.follow_up_message }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "message",
+              "displayName": "message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Classification",
+              "displayName": "Classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Service Needed",
+              "displayName": "Service Needed",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reason",
+              "displayName": "Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Follow Up Message",
+              "displayName": "Follow Up Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        496,
+        32
+      ],
+      "id": "2cd0688a-5f68-4c92-b294-9290fcd7a6a4",
+      "name": "Append row in sheet"
+    },
+    {
+      "parameters": {
+        "sendTo": "your-email@example.com",
+        "subject": "New Lead Received – AI Lead Management System",
+        "message": "=<h2>🔥 New Lead Received!</h2>  <p>A new potential client has submitted their information.</p> <hr>  <p><strong>👤 Name:</strong> {{ $('Edit Fields').item.json.name }}</p>  <p><strong>📧 Email:</strong> {{ $('Edit Fields').item.json.email }}</p>  <p><strong>🏢 Company:</strong> {{ $('Edit Fields').item.json.company }}</p>  <p><strong>💬 Message:</strong> {{ $('Edit Fields').item.json.message }}</p>  <p><strong>📌 Status:</strong> {{ $('Edit Fields').item.json.status }}</p>  <hr>  <p><strong>🤖 AI Classification:</strong> {{ $('AI Agent').item.json.output.classification }}</p>  <p><strong>🛠 Service Needed:</strong> {{ $('AI Agent').item.json.output.service_needed }}</p>  <p><strong>📝 Reason:</strong> {{ $('AI Agent').item.json.output.reason }}</p>  <p><strong>📩 Suggested Follow-up:</strong><br> {{ $('AI Agent').item.json.output.follow_up_message }}</p>  <hr>  <i>Automatically sent by your AI Lead Management System 🤖</i>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        720,
+        32
+      ],
+      "id": "d071a250-f0d5-42ea-972b-32faa81eea5c",
+      "name": "Send a message"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Lead Management Assistant.\n\nAnalyze the following business lead:\n\nName: {{ $json.name }}\nEmail: {{ $json.email }}\nCompany: {{ $json.company }}\nMessage: {{ $json.message }}\n\nYour tasks:\n\n1. Classify the lead as Hot, Warm, or Cold.\n2. Identify the service the client needs.\n3. Give a short reason for your classification.\n4. Create a short personalized follow-up response.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        32
+      ],
+      "id": "1cb46bea-3e05-4ab7-9a7d-93145957dcdf",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini",
+          "cachedResultName": "gpt-5-mini",
+          "cachedResultUrl": ""
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        152,
+        264
+      ],
+      "id": "a929d7b6-e850-4907-9954-f323e0a87831",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"classification\": \"Hot\",\n  \"service_needed\": \"AI automation system\",\n  \"reason\": \"The lead is interested and needs automation.\",\n  \"follow_up_message\": \"Hi! Thanks for your interest. Let's discuss your AI automation requirements.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        280,
+        264
+      ],
+      "id": "06642b18-1bce-4658-8b1f-da7f37722cdf",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "nodeGroups": [],
+  "tags": []
+}
